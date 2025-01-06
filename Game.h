@@ -23,6 +23,9 @@ namespace kurs2 {
 			InitializeComponent();
 			numbers = gcnew List<int>();
 			InitializeLabels(); // Инициализация меток
+			sumophide = 0; // Инициализация суммы противника без первой карты
+			sumopopen = 0; // Инициализация суммы противника с первой картой
+			sumpl = 0; // Инициализация суммы игрока
 			//
 			//TODO: добавьте код конструктора
 			//
@@ -39,17 +42,6 @@ namespace kurs2 {
 				delete components;
 			}
 		}
-
-
-
-
-
-
-
-
-
-
-
 
 	protected:
 
@@ -70,7 +62,12 @@ namespace kurs2 {
 		array<Label^>^ labels; // Массив меток для отображения чисел
 	private: System::Windows::Forms::Button^ button_brat;
 	private: System::Windows::Forms::Button^ button1;
-		   int currentLabelIndex; // Индекс текущей метки для обновления
+	int currentLabelIndex; // Индекс текущей метки для обновления
+	private: int sumophide; // Сумма противника без первой карты
+	private: int sumopopen; // Сумма противника с первой картой
+	private: int sumpl; // Сумма игрока
+	private: System::Windows::Forms::Label^ label1;
+	private: System::Windows::Forms::Label^ label2;
 #pragma region Windows Form Designer generated code
 		/// <summary>
 		/// Требуемый метод для поддержки конструктора — не изменяйте 
@@ -81,6 +78,8 @@ namespace kurs2 {
 		{
 			this->button_brat = (gcnew System::Windows::Forms::Button());
 			this->button1 = (gcnew System::Windows::Forms::Button());
+			this->label1 = (gcnew System::Windows::Forms::Label());
+			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->SuspendLayout();
 			// 
 			// button_brat
@@ -102,17 +101,38 @@ namespace kurs2 {
 			this->button1->Text = L"button1";
 			this->button1->UseVisualStyleBackColor = true;
 			// 
+			// label1
+			// 
+			this->label1->AutoSize = true;
+			this->label1->Location = System::Drawing::Point(324, 490);
+			this->label1->Name = L"label1";
+			this->label1->Size = System::Drawing::Size(46, 17);
+			this->label1->TabIndex = 14;
+			this->label1->Text = L"label1";
+			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->Location = System::Drawing::Point(324, 442);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(46, 17);
+			this->label2->TabIndex = 15;
+			this->label2->Text = L"label2";
+			// 
 			// Game
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1499, 745);
+			this->Controls->Add(this->label2);
+			this->Controls->Add(this->label1);
 			this->Controls->Add(this->button1);
 			this->Controls->Add(this->button_brat);
 			this->Name = L"Game";
 			this->Text = L"Game";
 			this->Load += gcnew System::EventHandler(this, &Game::Game_Load);
 			this->ResumeLayout(false);
+			this->PerformLayout();
 
 		}
 #pragma endregion
@@ -122,6 +142,7 @@ namespace kurs2 {
 		{
 			numbers->Add(i);
 		}
+		currentLabelIndex = 0; // Сброс индекса текущей метки
 		// Генерация случайного индекса
 		Random^ rand = gcnew Random();
 		int randomIndex = rand->Next(0, numbers->Count); // Генерация индекса от 0 до Count-1
@@ -130,12 +151,22 @@ namespace kurs2 {
 		int randomNumber = numbers[randomIndex];
 
 		// Обновление текста текущей метки
-		if (currentLabelIndex < 12) // Проверяем, что индекс метки не превышает 10
-		{
 			labels[currentLabelIndex]->Text = randomNumber.ToString();
 			currentLabelIndex++; // Переходим к следующей метке
-		}
+		sumpl += randomNumber;
+		// Удаление элемента из списка
+		numbers->RemoveAt(randomIndex); // Удаление элемента из списка
+		
+		randomIndex = rand->Next(0, numbers->Count); // Генерация индекса от 0 до Count-1
 
+		// Получение случайного числа
+		randomNumber = numbers[randomIndex];
+		int pervia_karta_op = numbers[randomIndex];
+		// Обновление текста текущей метки
+			labels[currentLabelIndex]->Text = "?";
+		
+			currentLabelIndex++; // Переходим к следующей метке
+		sumopopen += randomNumber;
 		// Удаление элемента из списка
 		numbers->RemoveAt(randomIndex); // Удаление элемента из списка
 		
@@ -145,42 +176,24 @@ namespace kurs2 {
 		randomNumber = numbers[randomIndex];
 
 		// Обновление текста текущей метки
-		if (currentLabelIndex < 12) // Проверяем, что индекс метки не превышает 10
-		{
-			labels[currentLabelIndex]->Text = randomNumber.ToString();
-			currentLabelIndex++; // Переходим к следующей метке
-		}
-
+		labels[currentLabelIndex]->Text = randomNumber.ToString();
+		currentLabelIndex++; // Переходим к следующей метке
+		sumpl += randomNumber;
+		label1->Text = "Сумма игрока: " + sumpl.ToString();
 		// Удаление элемента из списка
 		numbers->RemoveAt(randomIndex); // Удаление элемента из списка
-		
+
 		randomIndex = rand->Next(0, numbers->Count); // Генерация индекса от 0 до Count-1
 
 		// Получение случайного числа
 		randomNumber = numbers[randomIndex];
 
 		// Обновление текста текущей метки
-		if (currentLabelIndex < 12) // Проверяем, что индекс метки не превышает 10
-		{
-			labels[currentLabelIndex]->Text = randomNumber.ToString();
-			currentLabelIndex++; // Переходим к следующей метке
-		}
-
-		// Удаление элемента из списка
-		numbers->RemoveAt(randomIndex); // Удаление элемента из списка
-		
-		randomIndex = rand->Next(0, numbers->Count); // Генерация индекса от 0 до Count-1
-
-		// Получение случайного числа
-		randomNumber = numbers[randomIndex];
-
-		// Обновление текста текущей метки
-		if (currentLabelIndex < 12) // Проверяем, что индекс метки не превышает 10
-		{
-			labels[currentLabelIndex]->Text = randomNumber.ToString();
-			currentLabelIndex++; // Переходим к следующей метке
-		}
-
+		labels[currentLabelIndex]->Text = randomNumber.ToString();
+		currentLabelIndex++; // Переходим к следующей метке
+		sumopopen += randomNumber;
+		sumophide += randomNumber;
+		label2->Text = "Сумма игрока: ? + " + sumophide.ToString();
 		// Удаление элемента из списка
 		numbers->RemoveAt(randomIndex); // Удаление элемента из списка
 	}
@@ -208,12 +221,6 @@ namespace kurs2 {
 			   
 		   };
 	private: System::Void button_brat_Click(System::Object^ sender, System::EventArgs^ e) {
-		if (numbers->Count == 0)
-		{
-			MessageBox::Show("Все числа использованы!");
-			return;
-		}
-
 		// Генерация случайного индекса
 		Random^ rand = gcnew Random();
 		int randomIndex = rand->Next(0, numbers->Count); // Генерация индекса от 0 до Count-1
@@ -222,12 +229,10 @@ namespace kurs2 {
 		int randomNumber = numbers[randomIndex];
 
 		// Обновление текста текущей метки
-		if (currentLabelIndex < 12) // Проверяем, что индекс метки не превышает 12
-		{
 			labels[currentLabelIndex]->Text = randomNumber.ToString();
 			currentLabelIndex++; // Переходим к следующей метке
-		}
-
+		sumpl += randomNumber;
+		label1->Text = "Сумма игрока: " + sumpl.ToString();
 		// Удаление элемента из списка
 		numbers->RemoveAt(randomIndex); // Удаление элемента из списка
 		randomIndex = rand->Next(0, numbers->Count); // Генерация индекса от 0 до Count-1
@@ -236,11 +241,12 @@ namespace kurs2 {
 		randomNumber = numbers[randomIndex];
 
 		// Обновление текста текущей метки
-		if (currentLabelIndex < 12) // Проверяем, что индекс метки не превышает 12
-		{
 			labels[currentLabelIndex]->Text = randomNumber.ToString();
-			currentLabelIndex++; // Переходим к следующей метке
-		}
+			currentLabelIndex++; // Переходим к следующей метке	
+			sumophide += randomNumber;
+			sumopopen += randomNumber;
+			label2->Text = "Сумма противника: ? + " + sumophide.ToString();
+		
 
 		// Удаление элемента из списка
 		numbers->RemoveAt(randomIndex); // Удаление элемента из списка
