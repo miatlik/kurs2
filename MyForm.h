@@ -1,5 +1,5 @@
 #pragma once
-
+#include"Game.h"
 namespace kurs2 {
 
 	using namespace System;
@@ -127,6 +127,10 @@ namespace kurs2 {
 		MessageBox::Show("Hello, world.");
 	}
 	private: System::Void buttonplay_Click(System::Object^ sender, System::EventArgs^ e) {
+		Game^ open = gcnew Game;
+		open->Show();
+		open->Owner = this;
+		this->Hide();
 	}
 	
 private: System::Void buttonexit_Click(System::Object^ sender, System::EventArgs^ e) {
