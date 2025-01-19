@@ -77,6 +77,7 @@ namespace kurs2 {
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::Button^ button_exit;
 	private: System::Windows::Forms::Button^ button_rule;
+	private: System::Windows::Forms::Button^ button_restart;
 	private: System::Windows::Forms::Label^ label2;
 #pragma region Windows Form Designer generated code
 		/// <summary>
@@ -92,6 +93,7 @@ namespace kurs2 {
 			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->button_exit = (gcnew System::Windows::Forms::Button());
 			this->button_rule = (gcnew System::Windows::Forms::Button());
+			this->button_restart = (gcnew System::Windows::Forms::Button());
 			this->SuspendLayout();
 			// 
 			// button_brat
@@ -160,7 +162,7 @@ namespace kurs2 {
 			this->button_rule->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
 			this->button_rule->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
 				static_cast<System::Byte>(204)));
-			this->button_rule->Location = System::Drawing::Point(1163, 648);
+			this->button_rule->Location = System::Drawing::Point(1171, 648);
 			this->button_rule->Name = L"button_rule";
 			this->button_rule->Size = System::Drawing::Size(90, 47);
 			this->button_rule->TabIndex = 17;
@@ -168,11 +170,26 @@ namespace kurs2 {
 			this->button_rule->UseVisualStyleBackColor = true;
 			this->button_rule->Click += gcnew System::EventHandler(this, &Game::button_rule_Click);
 			// 
+			// button_restart
+			// 
+			this->button_restart->FlatStyle = System::Windows::Forms::FlatStyle::Flat;
+			this->button_restart->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 7.8F, System::Drawing::FontStyle::Bold, System::Drawing::GraphicsUnit::Point,
+				static_cast<System::Byte>(204)));
+			this->button_restart->Location = System::Drawing::Point(1005, 648);
+			this->button_restart->Name = L"button_restart";
+			this->button_restart->Size = System::Drawing::Size(129, 47);
+			this->button_restart->TabIndex = 18;
+			this->button_restart->Text = L"Перезапуск";
+			this->button_restart->UseVisualStyleBackColor = true;
+			this->button_restart->Visible = false;
+			this->button_restart->Click += gcnew System::EventHandler(this, &Game::button_restart_Click);
+			// 
 			// Game
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(8, 16);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
 			this->ClientSize = System::Drawing::Size(1682, 745);
+			this->Controls->Add(this->button_restart);
 			this->Controls->Add(this->button_rule);
 			this->Controls->Add(this->button_exit);
 			this->Controls->Add(this->label2);
@@ -180,7 +197,7 @@ namespace kurs2 {
 			this->Controls->Add(this->button_pas);
 			this->Controls->Add(this->button_brat);
 			this->Name = L"Game";
-			this->Text = L"Game";
+			this->Text = L"Блэкджек";
 			this->Load += gcnew System::EventHandler(this, &Game::Game_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
@@ -398,7 +415,30 @@ private: System::Void button_exit_Click(System::Object^ sender, System::EventArg
 				   MessageBox::Show(rez+ "Вы проиграли. Противник ближе к 21 очку", "Результаты", MessageBoxButtons::OK, MessageBoxIcon::Information);
 			   else if (sumpl < 22 && sumopopen < 22 && sumpl > sumopopen)
 				   MessageBox::Show(rez+ "Вы выиграли. Вы ближе к 21 очку", "Результаты", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			   else if (sumpl == sumopopen)
+				   MessageBox::Show(rez + "Ничья", "Результаты", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			   this->button_restart->Visible = true;
 		   }
 	   }
+private: System::Void button_restart_Click(System::Object^ sender, System::EventArgs^ e) {
+	numbers->Clear();
+	sumophide = 0;
+	sumopopen = 0;
+	sumpl = 0;
+	fop = 1;
+	fp = 1;
+	kartiplstr = "";
+	kartiopstr = "";
+
+	// Сброс меток
+	for (int i = 0; i < 14; i++) {
+		labels[i]->Visible = false;
+	}
+	this->button_brat->Enabled = true;
+	this->button_pas->Enabled = true;
+	this->button_restart->Visible = false;
+	// Перезапуск игры
+	Game_Load(sender, e);
+}
 };
 }
