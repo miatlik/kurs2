@@ -124,7 +124,8 @@ namespace kurs2 {
 	}
 	
 	private: System::Void buttonrule_Click(System::Object^ sender, System::EventArgs^ e) {
-		MessageBox::Show("Hello, world.");
+		MessageBox::Show("'21' с 11 картами Ц стратегическа€ карточна€ игра.ќсобенность игры в том, что все карты у противника, кроме первой, видно и игрок может предполагать какие карты остались в колоде\
+. ” кого сумма ближе к 21 очку тот и победил.", "ѕравила", MessageBoxButtons::OK, MessageBoxIcon::Information);
 	}
 	private: System::Void buttonplay_Click(System::Object^ sender, System::EventArgs^ e) {
 		Game^ open = gcnew Game;

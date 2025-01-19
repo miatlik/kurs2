@@ -26,7 +26,9 @@ namespace kurs2 {
 			sumophide = 0; // Инициализация суммы противника без первой карты
 			sumopopen = 0; // Инициализация суммы противника с первой картой
 			sumpl = 0; // Инициализация суммы игрока
-			fop = 1;
+			fop = 1;//инициализация флажка паса противника
+			fp = 1;//инициализация флажка паса игрока
+			vivodrez();
 			//
 			//TODO: добавьте код конструктора
 			//
@@ -68,7 +70,10 @@ namespace kurs2 {
 	private: int sumophide; // Сумма противника без первой карты
 	private: int sumopopen; // Сумма противника с первой картой
 	private: int sumpl; // Сумма игрока
-	private: int fop;
+	private: int fop;// флажок паса противника
+	private: int fp;// флажок паса игрока
+	private: String^ kartiplstr;
+	private: String^ kartiopstr;
 	private: System::Windows::Forms::Label^ label1;
 	private: System::Windows::Forms::Button^ button_exit;
 	private: System::Windows::Forms::Button^ button_rule;
@@ -201,6 +206,7 @@ namespace kurs2 {
 		this->labels[currentLabelIndex]->Visible = true;
 		currentLabelIndex++; // Переходим к следующей метке
 		sumpl += randomNumber;
+		kartiplstr = kartiplstr + randomNumber.ToString() + ", ";
 		// Удаление элемента из списка
 		numbers->RemoveAt(randomIndex); // Удаление элемента из списка
 
@@ -214,6 +220,7 @@ namespace kurs2 {
 		this->labels[currentLabelIndex]->Visible = true;
 		currentLabelIndex++; // Переходим к следующей метке
 		sumopopen += randomNumber;
+		kartiopstr = kartiopstr + randomNumber.ToString() + ", ";
 		// Удаление элемента из списка
 		numbers->RemoveAt(randomIndex); // Удаление элемента из списка
 
@@ -228,6 +235,7 @@ namespace kurs2 {
 		currentLabelIndex++; // Переходим к следующей метке
 		sumpl += randomNumber;
 		label1->Text = "Сумма игрока: " + sumpl.ToString();
+		kartiplstr = kartiplstr + randomNumber.ToString() + ", ";
 		// Удаление элемента из списка
 		numbers->RemoveAt(randomIndex); // Удаление элемента из списка
 
@@ -243,6 +251,7 @@ namespace kurs2 {
 		sumopopen += randomNumber;
 		sumophide += randomNumber;
 		label2->Text = "Сумма противника: ? + " + sumophide.ToString();
+		kartiopstr = kartiopstr + randomNumber.ToString() + ", ";
 		// Удаление элемента из списка
 		numbers->RemoveAt(randomIndex); // Удаление элемента из списка
 
@@ -302,6 +311,7 @@ namespace kurs2 {
 		if (fop == 0) currentLabelIndex++;
 		sumpl += randomNumber;
 		label1->Text = "Сумма игрока: " + sumpl.ToString();
+		kartiplstr = kartiplstr + randomNumber.ToString() + ", ";
 		// Удаление элемента из списка
 		numbers->RemoveAt(randomIndex); // Удаление элемента из списка
 		randomIndex = rand->Next(0, numbers->Count); // Генерация индекса от 0 до Count-1
@@ -317,6 +327,7 @@ namespace kurs2 {
 				sumophide += randomNumber;
 				sumopopen += randomNumber;
 				label2->Text = "Сумма противника: ? + " + sumophide.ToString();
+				kartiopstr = kartiopstr + randomNumber.ToString() + ", ";
 				// Удаление элемента из списка
 				numbers->RemoveAt(randomIndex); // Удаление элемента из списка
 			}
@@ -328,6 +339,7 @@ namespace kurs2 {
 			}
 		}
 		if (sumpl>20) this->button_brat->Enabled = false;
+		vivodrez();
 	}
 private: System::Void button_pas_Click(System::Object^ sender, System::EventArgs^ e) {
 	
@@ -351,19 +363,42 @@ private: System::Void button_pas_Click(System::Object^ sender, System::EventArgs
 		sumophide += randomNumber;
 		sumopopen += randomNumber;
 		label2->Text = "Сумма противника: ? + " + sumophide.ToString();
+		kartiopstr = kartiopstr + randomNumber.ToString() + ", ";
 		// Удаление элемента из списка
 		numbers->RemoveAt(randomIndex); // Удаление элемента из списка
 	}		
 	if (fop == 1) {
 		labels[currentLabelIndex]->Text = "Противник спасовал";
 		this->labels[currentLabelIndex]->Visible = true;
-	}						
+		fop = 0;
+	}
+	fp = 0;
+	vivodrez();
 }
 private: System::Void button_rule_Click(System::Object^ sender, System::EventArgs^ e) {
-	MessageBox::Show("Hello, world.");
+	MessageBox::Show("'21' с 11 картами – стратегическая карточная игра.Особенность игры в том, что все карты у противника, кроме первой, видно и игрок может предполагать какие карты остались в колоде\
+. У кого сумма ближе к 21 очку тот и победил.", "Правила", MessageBoxButtons::OK, MessageBoxIcon::Information);
 }
 private: System::Void button_exit_Click(System::Object^ sender, System::EventArgs^ e) {
 	Application::Exit();
 }
+	   void vivodrez() {
+		   if (fp == 0 && fop == 0) {
+			   
+			   String^ rez = "Карты противника: " + kartiopstr + sumopopen + "/21" + "\nКарты игрока: " + kartiplstr + sumpl + "/21" + "\n";
+			   if (sumpl > 21 && sumopopen < 22)
+				   MessageBox::Show(rez+ "У вас перебор.Вы проиграли", "Результаты", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			   else if (sumpl < 22 && sumopopen > 21)
+				   MessageBox::Show(rez+"У противника перебор. Вы выиграли", "Результаты", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			   else if (sumpl > 21 && sumopopen > 21 && sumpl < sumopopen)
+				   MessageBox::Show(rez+ "У вас и противника перебор.Вы выиграли, так как имеете меньше очков", "Результаты", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			   else if (sumpl > 21 && sumopopen > 21 && sumpl > sumopopen)
+				   MessageBox::Show(rez+ "У вас и противника перебор.Вы проиграли, так как имеете больше очков", "Результаты", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			   else if (sumpl < 22 && sumopopen < 22 && sumpl < sumopopen)
+				   MessageBox::Show(rez+ "Вы проиграли. Противник ближе к 21 очку", "Результаты", MessageBoxButtons::OK, MessageBoxIcon::Information);
+			   else if (sumpl < 22 && sumopopen < 22 && sumpl > sumopopen)
+				   MessageBox::Show(rez+ "Вы выиграли. Вы ближе к 21 очку", "Результаты", MessageBoxButtons::OK, MessageBoxIcon::Information);
+		   }
+	   }
 };
 }
